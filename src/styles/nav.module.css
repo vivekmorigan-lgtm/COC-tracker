@@ -1,0 +1,58 @@
+@font-face {
+  font-family: 'ClashRegular';
+  src: url('../assets/clashregular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.nav {
+  background: linear-gradient(90deg, #141414 0%, #1c1c1c 100%);
+  padding: 0.6rem 2rem;
+  border-bottom: 2px solid #ffb400; /* Clash gold accent */
+  font-family: 'ClashRegular', sans-serif;
+  letter-spacing: 1px;
+}
+
+.coc {
+  color: #ffb400;
+  text-shadow: 2px 2px 0px #000;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.navbar-toggler {
+  border: none;
+  background: transparent;
+}
+
+.navbar-toggler-icon {
+  filter: invert(100%);
+}
+
+.nav-item {
+  margin: 0 0.6rem;
+}
+
+.nav-link,
+.btn {
+  color: #ffb400 !important;
+  transition: all 0.3s ease;
+  font-size: 1.3rem;
+}
+
+.nav-link:hover,
+.btn:hover {
+  color: #fff !important;
+  transform: scale(1.1);
+}
+
+.btn {
+  border: 1px solid #ffb400;
+  background-color: transparent;
+  border-radius: 8px;
+}
+
+.btn:hover {
+  background-color: #ffb400;
+  color: #1c1c1c !important;
+}

@@ -4,3 +4,16 @@
   font-weight: normal;
   font-style: normal;
 }
+:root{
+  --pri: #ffb400;
+  --pri-dark: #de9f0d;
+  --sec: #1c1c1c;
+  --ter: #dbb4a8;
+  --light: #fff;
+  --font-coc: 'SupercellMagic';
+}
+body{
+    background: url('../img/Background.png');
+    background-position: center;
+    background-repeat: no-repeat;
+}

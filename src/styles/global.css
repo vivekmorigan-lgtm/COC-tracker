@@ -1,19 +1,38 @@
 @font-face {
-  font-family: 'SupercellMagic';
-  src: url('../fonts/Clash_Regular.otf') format('truetype');
+  font-family: "SupercellMagic";
+  src: url("../fonts/Clash_Regular.otf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
-:root{
+:root {
   --pri: #ffb400;
   --pri-dark: #de9f0d;
   --sec: #1c1c1c;
-  --ter: #dbb4a8;
   --light: #fff;
-  --font-coc: 'SupercellMagic';
+  --font-coc: "SupercellMagic";
+  --card: #0b0b0b;
 }
-body{
-    background: url('../img/Background.png');
-    background-position: center;
-    background-repeat: no-repeat;
+body {
+  background: url("../img/Background.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+body::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #21212170;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+}
+
+::selection{
+  background: var(--pri-dark);
+  color: var(--light);
 }

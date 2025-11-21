@@ -4,9 +4,42 @@ import SignUp from "./SignUp";
 import style from "../styles/land.module.css";
 
 export default function Land() {
-  const [view, setView] = useState("landing"); // 'landing', 'login', 'signup'
+  const [view, setView] = useState("landing");
+  const [subscribeStatus, setSubscribeStatus] = useState(""); 
+  const [subscribeMessage, setSubscribeMessage] = useState("");
 
   const handleBack = () => setView("landing");
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+
+    setSubscribeStatus("subscribing");
+    setSubscribeMessage("");
+
+    try {
+      const response = await fetch("https://formspree.io/f/myznnlqp", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (response.ok) {
+        setSubscribeStatus("success");
+        setSubscribeMessage("Thanks for subscribing!");
+        form.reset();
+      } else {
+        const data = await response.json();
+        const errorMessage = data.errors?.map((error) => error.message).join(", ") || "Oops! There was a problem submitting your form";
+        throw new Error(errorMessage);
+      }
+    } catch (error) {
+      setSubscribeStatus("error");
+      setSubscribeMessage(error.message);
+    }
+  };
 
   if (view === "login") {
     return (
@@ -123,13 +156,79 @@ export default function Land() {
         </section>
       </main>
       <footer className={style.footer}>
-      <p>© 2024 COC Tracker. All rights reserved.</p>
-      <p>
-        Built with ❤️ by Vivek .{" "}
-        <a href="https://github.com/vivekmorigan-lgtm" target="_blank" rel="noopener noreferrer">
-          Source Code
-        </a>
-      </p>
+        <div className={style.footerContainer}>
+          <div className={style.footerGrid}>
+            <div className={style.footerBrand}>
+              <h4 className={style.logo}>COC Tracker</h4>
+              <p className={style.brandTag}>Master your Clan — Track your Progress</p>
+            </div>
+
+            <div className={style.footerColumn}>
+              <h5 className={style.colTitle}>Product</h5>
+              <ul className={style.colList}>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#">Roadmap</a></li>
+              </ul>
+            </div>
+
+            <div className={style.footerColumn}>
+              <h5 className={style.colTitle}>Resources</h5>
+              <ul className={style.colList}>
+                <li>
+                  <a href="https://github.com/vivekmorigan-lgtm/COC-tracker" target="_blank" rel="noopener noreferrer">
+                    Source code
+                  </a>
+                </li>
+                <li><a href="#">Docs</a></li>
+                <li><a href="#">Support</a></li>
+              </ul>
+            </div>
+
+            <div className={style.footerColumn}>
+              <h5 className={style.colTitle}>Stay Updated</h5>
+              <form onSubmit={handleSubscribe} className={style.subscribeForm} noValidate>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Your email"
+                  aria-label="Email"
+                  required
+                  className={style.subscribeInput}
+                />
+                <button type="submit" className={style.subscribeBtn} disabled={subscribeStatus === 'subscribing'}>
+                  {subscribeStatus === 'subscribing' ? 'Subscribing...' : 'Subscribe'}
+                </button>
+              </form>
+              {subscribeMessage && (
+                <p className={`${style.subscribeMessage} ${subscribeStatus === 'error' ? style.error : style.success}`}>
+                  {subscribeMessage}
+                </p>
+              )}
+
+              <div className={style.socialRow}>
+                <a href="mailto:Twinzler@proton.me" title="Email" target="_blank" rel="noopener noreferrer">
+                  <i className="bi bi-envelope-fill"></i>
+                </a>
+                <a href="https://github.com/vivekmorigan-lgtm" title="GitHub" target="_blank" rel="noopener noreferrer">
+                  <i className="bi bi-github"></i>
+                </a>
+                <a href="https://discord.com/users/1406246927300821032" title="Discord" target="_blank" rel="noopener noreferrer">
+                  <i className="bi bi-discord"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className={style.footerBottom}>
+            <p>© {new Date().getFullYear()} COC Tracker. All rights reserved.</p>
+            <nav className={style.footerNav}>
+              <a href="/terms">Terms</a>
+              <a href="/privacy">Privacy</a>
+              <a href="#contact">Contact</a>
+            </nav>
+          </div>
+        </div>
       </footer>
     </div>
   );

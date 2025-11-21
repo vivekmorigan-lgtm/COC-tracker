@@ -200,3 +200,141 @@
 .footer p {
   margin: 0;
 }
+
+/* Professional footer layout */
+.footerContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem 0 1rem;
+}
+
+.footerGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.footerBrand {
+  text-align: left;
+}
+
+.brandTag {
+  color: #b0b0c0;
+  margin-top: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.footerColumn {
+  text-align: left;
+}
+
+.colTitle {
+  color: #e0e0e0;
+  margin-bottom: 0.6rem;
+  font-size: 1rem;
+}
+
+.colList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.colList li {
+  margin-bottom: 0.5rem;
+}
+
+.subscribeForm {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.subscribeInput {
+  flex: 1;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #2a2a4a;
+  background: #0f0f1a;
+  color: #e0e0e0;
+}
+
+.subscribeBtn {
+  padding: 0.6rem 0.9rem;
+  background: var(--pri);
+  border: none;
+  border-radius: 8px;
+  color: #161625;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.socialRow a {
+  margin-right: 0.6rem;
+  color: #e0e0e0;
+  font-size: 1.45rem;
+  margin: 5px;
+}
+.socialRow a:hover {
+  color: var(--pri);
+}
+
+.footerBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  border-top: 1px solid #2a2a4a;
+  padding-top: 1rem;
+}
+
+.footerNav a {
+  margin-left: 1rem;
+  color: #888;
+  text-decoration: none;
+}
+
+.footerNav a:hover {
+  color: var(--pri);
+}
+
+@media (max-width: 900px) {
+  .footerGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .footerBottom {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  .footerBrand {
+    text-align: center;
+  }
+  .footerColumn {
+    text-align: center;
+  }
+  .subscribeForm {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .footerGrid {
+    grid-template-columns: 1fr;
+  }
+  .subscribeForm {
+    flex-direction: column;
+  }
+  .subscribeBtn {
+    width: 100%;
+  }
+}
+.subscribeMessage.success {
+  color: #4BB543;
+  margin-top: 0.5rem;
+}
+.subscribeMessage.error {
+  color: #FF4136;
+  margin-top: 0.5rem;
+}

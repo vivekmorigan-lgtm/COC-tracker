@@ -2,6 +2,18 @@
 import React, { useState, useEffect } from "react";
 import style from "../styles/main.module.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { auth, db } from "../userdata/firebase.js";
+import { 
+  collection, 
+  addDoc, 
+  deleteDoc, 
+  doc, 
+  onSnapshot, 
+  query, 
+  where,
+  serverTimestamp 
+} from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
 const troops = [
   "Barbarian",
@@ -60,21 +72,42 @@ export default function Main() {
   const [item, setItem] = useState("");
   const [village, setVillage] = useState("");
   const [time, setTime] = useState("");
+  const [tasks, setTasks] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const [tasks, setTasks] = useState(() => {
-    try {
-      const saved = localStorage.getItem("coc_tasks");
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-
+  // Monitor authentication state
   useEffect(() => {
-    try {
-      localStorage.setItem("coc_tasks", JSON.stringify(tasks));
-    } catch {}
-  }, [tasks]);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Real-time sync with Firebase
+  useEffect(() => {
+    if (!currentUser) {
+      setTasks([]);
+      return;
+    }
+
+    const tasksRef = collection(db, "tasks");
+    const q = query(tasksRef, where("userId", "==", currentUser.uid));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const tasksData = [];
+      snapshot.forEach((doc) => {
+        tasksData.push({ id: doc.id, ...doc.data() });
+      });
+      setTasks(tasksData);
+    }, (error) => {
+      console.error("Error fetching tasks:", error);
+      alert("Error loading tasks. Please refresh the page.");
+    });
+
+    return () => unsubscribe();
+  }, [currentUser]);
 
   const convertTimeToMs = (str) => {
     if (!str) return 0;
@@ -99,27 +132,41 @@ export default function Main() {
     return total;
   };
 
-  const addTask = () => {
-    if (!type || !item || !village || !time) return alert("Fill all fields.");
+  const addTask = async () => {
+    if (!currentUser) {
+      return alert("Please sign in to add upgrades.");
+    }
+
+    if (!type || !item || !village || !time) {
+      return alert("Fill all fields.");
+    }
 
     const durationMs = convertTimeToMs(time);
-    if (durationMs <= 0) return alert("Invalid time format.");
+    if (durationMs <= 0) {
+      return alert("Invalid time format.");
+    }
 
-    const newTask = {
-      id: Date.now(),
-      type,
-      item,
-      village,
-      time,
-      endTime: Date.now() + durationMs,
-    };
+    try {
+      const tasksRef = collection(db, "tasks");
+      await addDoc(tasksRef, {
+        userId: currentUser.uid,
+        type,
+        item,
+        village,
+        time,
+        endTime: Date.now() + durationMs,
+        createdAt: serverTimestamp()
+      });
 
-    setTasks((prev) => [...prev, newTask]);
-    setShowModal(false);
-    setType("");
-    setItem("");
-    setVillage("");
-    setTime("");
+      setShowModal(false);
+      setType("");
+      setItem("");
+      setVillage("");
+      setTime("");
+    } catch (error) {
+      console.error("Error adding task:", error);
+      alert("Failed to add upgrade. Please try again.");
+    }
   };
 
   const formatRemaining = (end) => {
@@ -136,12 +183,53 @@ export default function Main() {
     return () => clearInterval(interval);
   }, []);
 
-  const removeTask = (id) => setTasks((t) => t.filter((x) => x.id !== id));
+  const removeTask = async (taskId) => {
+    if (!currentUser) return;
+
+    try {
+      const taskDoc = doc(db, "tasks", taskId);
+      await deleteDoc(taskDoc);
+    } catch (error) {
+      console.error("Error removing task:", error);
+      alert("Failed to remove upgrade. Please try again.");
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="parent">
+        <div className={style.contCard}>
+          <div className={style.row}>
+            <div className={style.col4}>
+              <div className={style.cardBox}>
+                Loading...
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    return (
+      <div className="parent">
+        <div className={style.contCard}>
+          <div className={style.row}>
+            <div className={style.col4}>
+              <div className={style.cardBox}>
+                Please sign in to manage your upgrades.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
       <div className="parent">
-        {" "}
         <div className={style.contBtn}>
           <button className={style.btn} onClick={() => setShowModal(true)}>
             <i className="bi bi-plus-circle"></i> Add Upgrade
@@ -151,7 +239,9 @@ export default function Main() {
           <div className={style.row}>
             {tasks.length === 0 && (
               <div className={style.col4}>
-                <div className={style.cardBox}>No upgrades yet.<div className={style.king}></div></div>
+                <div className={style.cardBox}>
+                  No upgrades yet.<div className={style.king}></div>
+                </div>
               </div>
             )}
 

@@ -13,7 +13,7 @@
   --card: #0b0b0b;
 }
 body {
-  background: url("../img/Background.png");
+  background: url("../img/Background.png") no-repeat center center fixed;
   background-position: center;
   background-repeat: no-repeat;
   overflow-x: hidden;

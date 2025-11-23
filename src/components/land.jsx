@@ -164,11 +164,10 @@ export default function Land() {
             </div>
 
             <div className={style.footerColumn}>
-              <h5 className={style.colTitle}>Product</h5>
+              <h5 className={style.colTitle}>More Product</h5>
               <ul className={style.colList}>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#">Roadmap</a></li>
+                <li><a href="https://philast.pages.dev/">Philast</a></li>
+                <li><a href="https://homepage015.pages.dev/">Homepage</a></li>
               </ul>
             </div>
 
@@ -180,8 +179,6 @@ export default function Land() {
                     Source code
                   </a>
                 </li>
-                <li><a href="#">Docs</a></li>
-                <li><a href="#">Support</a></li>
               </ul>
             </div>
 
@@ -215,6 +212,9 @@ export default function Land() {
                 </a>
                 <a href="https://discord.com/users/1406246927300821032" title="Discord" target="_blank" rel="noopener noreferrer">
                   <i className="bi bi-discord"></i>
+                </a>
+                <a href="https://contact015.pages.dev/" title="contact015" target="_blank" rel="noopener noreferrer">
+                  <i className="bi bi-headset"></i>
                 </a>
               </div>
             </div>

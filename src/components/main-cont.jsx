@@ -1,6 +1,7 @@
 // Main.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import style from "../styles/main.module.css";
+import data from "../data.json";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { auth, db } from "../userdata/firebase.js";
 import { 
@@ -15,57 +16,6 @@ import {
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
-const troops = [
-  "Barbarian",
-  "Archer",
-  "Giant",
-  "Goblin",
-  "Wall Breaker",
-  "Balloon",
-  "Wizard",
-  "Healer",
-  "Dragon",
-  "P.E.K.K.A.",
-  "Baby Dragon",
-  "Miner",
-  "Electro Dragon",
-  "Yeti",
-  "Dragon Rider",
-  "Electro Titan",
-  "Minion",
-  "Hog Rider",
-  "Valkyrie",
-  "Golem",
-  "Witch",
-  "Lava Hound",
-  "Bowler",
-  "Ice Golem",
-  "Headhunter",
-  "Apprentice Warden",
-];
-
-const buildings = [
-  "Town Hall",
-  "Cannon",
-  "Archer Tower",
-  "Mortar",
-  "Air Defense",
-  "Wizard Tower",
-  "Air Sweeper",
-  "Hidden Tesla",
-  "Bomb Tower",
-  "X-Bow",
-  "Inferno Tower",
-  "Eagle Artillery",
-  "Builder's Hut",
-  "Spell Tower",
-  "Army Camp",
-  "Barracks",
-  "Dark Barracks",
-];
-
-const villages = ["Home Village", "Builder Base"];
-
 export default function Main() {
   const [showModal, setShowModal] = useState(false);
   const [type, setType] = useState("");
@@ -75,8 +25,13 @@ export default function Main() {
   const [tasks, setTasks] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [notifPermission, setNotifPermission] = useState(
+    typeof window !== "undefined" && "Notification" in window
+      ? Notification.permission
+      : "denied"
+  );
+  const notifiedRef = useRef(new Set());
 
-  // Monitor authentication state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
@@ -113,6 +68,12 @@ export default function Main() {
     if (!str) return 0;
     const trimmed = str.trim();
 
+    // support HH:MM and HH:MM:SS (hours:minutes(:seconds))
+    if (/^\d+:\d+:\d+$/.test(trimmed)) {
+      const [a, b, c] = trimmed.split(":").map(Number);
+      return a * 3600000 + b * 60000 + c * 1000;
+    }
+
     if (/^\d+:\d+$/.test(trimmed)) {
       const [a, b] = trimmed.split(":").map(Number);
       return a * 3600000 + b * 60000;
@@ -120,18 +81,21 @@ export default function Main() {
 
     if (/^\d+$/.test(trimmed)) return Number(trimmed) * 60000;
 
+
     let total = 0;
+    const d = /([0-9]+)d/.exec(trimmed);
     const h = /([0-9]+)h/.exec(trimmed);
     const m = /([0-9]+)m/.exec(trimmed);
     const s = /([0-9]+)s/.exec(trimmed);
 
+    if (d) total += Number(d[1]) * 86400000;
     if (h) total += Number(h[1]) * 3600000;
     if (m) total += Number(m[1]) * 60000;
     if (s) total += Number(s[1]) * 1000;
 
     return total;
   };
-
+  
   const addTask = async () => {
     if (!currentUser) {
       return alert("Please sign in to add upgrades.");
@@ -183,6 +147,103 @@ export default function Main() {
     return () => clearInterval(interval);
   }, []);
 
+  // Request notification permission when user clicks the enable button
+  const requestNotifications = async () => {
+    if (typeof window === "undefined" || !("Notification" in window)) {
+      alert("Notifications are not supported in this browser.");
+      return;
+    }
+
+    try {
+      const permission = await Notification.requestPermission();
+      setNotifPermission(permission);
+      if (permission === "granted") {
+        try {
+          new Notification("Notifications enabled", {
+            body: "You'll get notified when upgrades complete.",
+          });
+        } catch (e) {
+          console.error("Notification error:", e);
+        }
+      }
+    } catch (err) {
+      console.error("Permission request failed:", err);
+    }
+  };
+
+  // Watch tasks and notify when they complete (once per task)
+  useEffect(() => {
+    if (typeof window === "undefined" || !("Notification" in window)) return;
+
+    const tick = () => {
+      // prune notified ids that no longer exist
+      const currentIds = new Set(tasks.map((t) => t.id));
+      for (const id of Array.from(notifiedRef.current)) {
+        if (!currentIds.has(id)) notifiedRef.current.delete(id);
+      }
+
+      if (notifPermission !== "granted") return;
+
+      tasks.forEach((t) => {
+        if (!t.id || !t.endTime) return;
+        if (t.endTime <= Date.now() && !notifiedRef.current.has(t.id)) {
+          try {
+            new Notification(`${t.type} Complete`, {
+              body: `${t.item} in ${t.village} has completed.`,
+              tag: t.id,
+            });
+          } catch (e) {
+            console.error("Notification failed:", e);
+          }
+          notifiedRef.current.add(t.id);
+        }
+      });
+    };
+
+    const id = setInterval(tick, 1000);
+    // run immediately once
+    tick();
+    return () => clearInterval(id);
+  }, [tasks, notifPermission]);
+
+  // Return list of type options depending on selected village
+  const getTypeOptionsByVillage = (villageName) => {
+    if (!villageName) return [];
+    if (villageName === "Home Village") {
+      return ["Troop", "Building", "Unit", "Hero", "Spell"];
+    }
+    if (villageName === "Builder Base") {
+      return ["Troop", "Building", "Hero"];
+    }
+    return ["Troop", "Building"];
+  };
+
+  // Given a selected type and village, return the appropriate items list from data.json
+  const getItemsForType = (typeName, villageName) => {
+    if (!typeName) return [];
+
+    switch (typeName) {
+      case "Troop":
+        return villageName === "Builder Base"
+          ? data.BuilderBaseTroops || []
+          : data.HomeVillageTroops || [];
+      case "Building":
+        return villageName === "Builder Base"
+          ? data.BuilderBaseBuildings || []
+          : data.HomeVillageBuildings || [];
+      case "Unit":
+        return data.units || [];
+      case "Spell":
+        return data.spells || [];
+      case "Hero":
+        return villageName === "Builder Base"
+          ? data.BuilderBaseHeroes || []
+          : data.HomeVillageHeroes || [];
+      default:
+        return [];
+    }
+  };
+
   const removeTask = async (taskId) => {
     if (!currentUser) return;
 
@@ -195,6 +256,7 @@ export default function Main() {
     }
   };
 
+
   if (loading) {
     return (
       <div className="parent">
@@ -202,7 +264,8 @@ export default function Main() {
           <div className={style.row}>
             <div className={style.col4}>
               <div className={style.cardBox}>
-                Loading...
+                <div className={style.loader}><h1>Loading...</h1>
+                </div>
               </div>
             </div>
           </div>
@@ -233,6 +296,15 @@ export default function Main() {
         <div className={style.contBtn}>
           <button className={style.btn} onClick={() => setShowModal(true)}>
             <i className="bi bi-plus-circle"></i> Add Upgrade
+          </button>
+          <button
+            className={style.btn}
+            onClick={requestNotifications}
+            disabled={notifPermission === "granted"}
+            style={{ marginLeft: "8px" }}
+          >
+            <i className="bi bi-bell"></i>{" "}
+            {notifPermission === "granted" ? "Notifications On" : "Enable Notifications"}
           </button>
         </div>
         <div className={style.contCard}>
@@ -270,53 +342,69 @@ export default function Main() {
             <div className={style.modalBox}>
               <h2>Add Upgrade</h2>
 
-              <select
-                className={style.input}
-                value={type}
-                onChange={(e) => {
-                  setType(e.target.value);
-                  setItem("");
-                }}
-              >
-                <option value="">Select Type</option>
-                <option value="Troop">Troop</option>
-                <option value="Building">Building</option>
-              </select>
-
-              <select
-                className={style.input}
-                value={item}
-                onChange={(e) => setItem(e.target.value)}
-                disabled={!type}
-              >
-                <option value="">Select {type || "Item"}</option>
-                {(type === "Troop" ? troops : buildings).map((i) => (
-                  <option key={i} value={i}>
-                    {i}
-                  </option>
-                ))}
-              </select>
-
+              {/* Progressive form: village -> type -> item -> time */}
               <select
                 className={style.input}
                 value={village}
-                onChange={(e) => setVillage(e.target.value)}
+                onChange={(e) => {
+                  setVillage(e.target.value);
+                  setType("");
+                  setItem("");
+                }}
               >
                 <option value="">Select Village</option>
-                {villages.map((v) => (
+                {data.villages.map((v) => (
                   <option key={v} value={v}>
                     {v}
                   </option>
                 ))}
               </select>
 
-              <input
-                className={style.input}
-                type="text"
-                placeholder="2h 30m / 90m / 1:30"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-              />
+              {/* Show type options only after village is selected */}
+              {village && (
+                <select
+                  className={style.input}
+                  value={type}
+                  onChange={(e) => {
+                    setType(e.target.value);
+                    setItem("");
+                  }}
+                >
+                  <option value="">Select Type</option>
+                  {getTypeOptionsByVillage(village).map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
+                </select>
+              )}
+
+              {/* Show item select only after a type is chosen */}
+              {type && (
+                <select
+                  className={style.input}
+                  value={item}
+                  onChange={(e) => setItem(e.target.value)}
+                >
+                  <option value="">Select {type}</option>
+                  {getItemsForType(type, village).map((i) => (
+                    <option key={i} value={i}>
+                      {i}
+                    </option>
+                  ))}
+                </select>
+              )}
+
+              {/* Show time input once an item is chosen (or allow entering time after type if desired) */}
+              {(type || item) && (
+                <input
+                  className={style.input}
+                  type="text"
+                  placeholder="1d 2h / 2h 30m / 90m / 1:30 / 1:02:03"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                />
+              )}
 
               <div className={style.modalBtns}>
                 <button className={style.btn} onClick={addTask}>

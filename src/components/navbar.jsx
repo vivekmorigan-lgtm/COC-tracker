@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import style from "../styles/nav.module.css";
+import { signOut } from "firebase/auth";
+import { auth } from "../userdata/firebase";
 
 function Nav() {
   const [open, setOpen] = useState(false);
+
+  const handleLogout = () => {
+    signOut(auth).catch((error) => console.error("Logout Error:", error));
+  };
 
   return (
     <>
@@ -20,6 +26,9 @@ function Nav() {
           </button>
           <button className={style.btn} onClick={() => window.open("https://discord.com/users/1406246927300821032", "_blank")}>
             <i className="bi bi-discord"></i>
+          </button>
+          <button className={style.btn} onClick={handleLogout}>
+            <i className="bi bi-box-arrow-right"></i>
           </button>
         </div>
 
@@ -43,6 +52,9 @@ function Nav() {
           </button>
           <button className={style.panelBtn} onClick={() => window.open("https://discord.com/users/1406246927300821032", "_blank")}>
             <i className="bi bi-discord"></i> Discord
+          </button>
+          <button className={style.panelBtn} onClick={handleLogout}>
+            <i className="bi bi-box-arrow-right"></i> Logout
           </button>
       </div>
 

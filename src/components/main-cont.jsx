@@ -15,6 +15,7 @@ import {
   serverTimestamp 
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import Loader from "./loader";
 
 export default function Main() {
   const [showModal, setShowModal] = useState(false);
@@ -135,7 +136,9 @@ export default function Main() {
 
   const formatRemaining = (end) => {
     const diff = end - Date.now();
-    if (diff <= 0) return "Completed";
+    if(diff <= 0){
+      return <p style={{color: "#99ff00ff", textAlign: "center", fontWeight: "bold",display: "inline" , fontSize: "20px"}}><i className="bi bi-check2-circle"></i></p>
+    };
     const h = Math.floor(diff / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
     const s = Math.floor((diff % 60000) / 1000);
@@ -209,39 +212,48 @@ export default function Main() {
   // Return list of type options depending on selected village
   const getTypeOptionsByVillage = (villageName) => {
     if (!villageName) return [];
+    let types = [];
     if (villageName === "Home Village") {
-      return ["Troop", "Building", "Unit", "Hero", "Spell"];
+      types = ["Troop", "Building", "Unit", "Hero", "Spell"];
+    } else if (villageName === "Builder Base") {
+      types = ["Troop", "Building", "Hero"];
+    } else {
+      types = ["Troop", "Building"];
     }
-    if (villageName === "Builder Base") {
-      return ["Troop", "Building", "Hero"];
-    }
-    return ["Troop", "Building"];
+    return types.sort();
   };
 
   // Given a selected type and village, return the appropriate items list from data.json
   const getItemsForType = (typeName, villageName) => {
     if (!typeName) return [];
 
+    let items = [];
     switch (typeName) {
       case "Troop":
-        return villageName === "Builder Base"
+        items = villageName === "Builder Base"
           ? data.BuilderBaseTroops || []
           : data.HomeVillageTroops || [];
+        break;
       case "Building":
-        return villageName === "Builder Base"
+        items = villageName === "Builder Base"
           ? data.BuilderBaseBuildings || []
           : data.HomeVillageBuildings || [];
+        break;
       case "Unit":
-        return data.units || [];
+        items = data.units || [];
+        break;
       case "Spell":
-        return data.spells || [];
+        items = data.spells || [];
+        break;
       case "Hero":
-        return villageName === "Builder Base"
+        items = villageName === "Builder Base"
           ? data.BuilderBaseHeroes || []
           : data.HomeVillageHeroes || [];
+        break;
       default:
-        return [];
+        items = [];
     }
+    return [...items].sort();
   };
 
   const removeTask = async (taskId) => {
@@ -263,10 +275,9 @@ export default function Main() {
         <div className={style.contCard}>
           <div className={style.row}>
             <div className={style.col4}>
-              <div className={style.cardBox}>
-                <div className={style.loader}><h1>Loading...</h1>
+                <div className={style.cardBox}>
+                  <Loader />
                 </div>
-              </div>
             </div>
           </div>
         </div>
@@ -421,6 +432,7 @@ export default function Main() {
           </div>
         )}
       </div>
+
     </>
   );
 }

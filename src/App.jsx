@@ -6,6 +6,7 @@ import Main from "./components/main-cont";
 import { auth } from "./userdata/firebase";
 import Land from "./components/land";
 import { onAuthStateChanged } from "firebase/auth";
+import Loader from "./components/loader";
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -21,7 +22,7 @@ export default function App() {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (

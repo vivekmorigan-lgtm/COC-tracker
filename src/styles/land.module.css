@@ -50,6 +50,9 @@
 .signupBtn {
   background-color: var(--pri);
   color: #161625;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
 }
 
 .signupBtn:hover {
@@ -245,7 +248,7 @@
   margin-bottom: 0.5rem;
 }
 .colList li a {
-  
+ 
   color: #b0b0c0;
 }
 
@@ -348,4 +351,78 @@
 .subscribeMessage.error {
   color: #FF4136;
   margin-top: 0.5rem;
+}
+
+.heroCont{
+  height: 300px;
+  width: 100%;
+  position: relative;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.king2{
+  height: 200px;
+  width: 200px;
+  background: url('../img/Kingno2.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.queen{
+  height: 200px;
+  width: 200px;
+  background: url('../img/Queen.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.wardern{
+  height: 200px;
+  width: 200px;
+  background: url('../img/Warden.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.champ{
+  height: 200px;
+  width: 200px;
+  background: url('../img/Champion.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.headHero{
+  color: #e0e0e0;
+  position: absolute;
+  left: 0;
+  bottom: 30px;
+  z-index: 0;
+  font-size: 11rem;
+  line-height: 0.85;
+  font-weight: 900;
+  opacity: 0.3;
+  pointer-events: none;
+  user-select: none;
+}
+
+.king2, .queen, .wardern, .champ, .imgMockup, .heroContent {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .headHero{
+    font-size: 6rem;
+    bottom: 20px;
+  }
+}
+@media (max-width: 480px) {
+  .headHero{
+    font-size: 4rem;
+    bottom: 15px;
+  }
 }

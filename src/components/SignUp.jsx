@@ -6,6 +6,7 @@ import style from "../styles/login.module.css";
 export default function SignUp({ onSwitchToLogin, onAuthSuccess, onBack }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rePassword, setRePassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -31,6 +32,30 @@ export default function SignUp({ onSwitchToLogin, onAuthSuccess, onBack }) {
     }
   };
 
+  const check = () => {
+    if (password.length < 6){
+      setError("Password should be at least 6 characters long.");
+    }
+    else {
+      setError("");
+    }
+  }
+
+  const check2 = () => {
+    if (rePassword.length === password.length && rePassword !== password){
+      setError("Passwords do not match.");
+    }
+    else {
+      setError("");
+    }
+  }
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    check();
+    check2();
+  };
+
   return (
     <div className={style.loginContainer}>
       <div className={style.loginBox}>
@@ -54,6 +79,14 @@ export default function SignUp({ onSwitchToLogin, onAuthSuccess, onBack }) {
             required
             autoComplete="new-password"
           />
+          <input
+           type="password" 
+           placeholder="Re-enter password" 
+            value={rePassword}
+            onChange={(e) => setRePassword(e.target.value)}
+           className={style.input} 
+           required 
+           />
           {error && <p className={style.error}>{error}</p>}
           <button type="submit" className={style.btn} disabled={loading}>
             {loading ? "Creating..." : "Sign Up"}

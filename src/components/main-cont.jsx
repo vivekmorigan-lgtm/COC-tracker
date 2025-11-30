@@ -24,6 +24,8 @@ export default function Main() {
   const [village, setVillage] = useState("");
   const [time, setTime] = useState("");
   const [tasks, setTasks] = useState([]);
+  // shared 'now' timestamp updated every second to avoid calling Date.now() during render
+  const [now, setNow] = useState(Date.now());
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notifPermission, setNotifPermission] = useState(
@@ -135,7 +137,7 @@ export default function Main() {
   };
 
   const formatRemaining = (end) => {
-    const diff = end - Date.now();
+    const diff = end - now;
     if(diff <= 0){
       return <p style={{color: "#99ff00ff", textAlign: "center", fontWeight: "bold",display: "inline" , fontSize: "20px"}}><i className="bi bi-check2-circle"></i></p>
     };
@@ -146,7 +148,11 @@ export default function Main() {
   };
 
   useEffect(() => {
-    const interval = setInterval(() => setTasks((t) => [...t]), 1000);
+    // Tick every second to keep the UI up-to-date without calling impure functions in render
+    const interval = setInterval(() => {
+      setTasks((t) => [...t]);
+      setNow(Date.now());
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
 

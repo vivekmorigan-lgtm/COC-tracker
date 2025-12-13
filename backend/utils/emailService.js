@@ -3,8 +3,8 @@ import nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.GMAIL_USER || 'Art.drop.015@gmail.com',
-    pass: process.env.GMAIL_APP_PASSWORD || 'awmp maey pugd cjqa'
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
   }
 });
 
@@ -12,7 +12,7 @@ export const sendPasswordResetEmail = async (name, email, resetToken) => {
   const resetUrl = `http://localhost:5173/reset-password?token=${resetToken}`;
 
   const mailOptions = {
-    from: `"Cheifs" <${process.env.GMAIL_USER || 'Art.drop.015@gmail.com'}>`,
+    from: `"Cheifs" <${process.env.GMAIL_USER}>`,
     to: email,
     subject: 'Reset Your Password - Chiefs.io',
     html: `

@@ -3,22 +3,34 @@ import "./styles/global.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Nav from "./components/navbar";
 import Main from "./components/main-cont";
-import { auth } from "./userdata/firebase";
 import Land from "./components/land";
-import { onAuthStateChanged } from "firebase/auth";
 import Loader from "./components/loader";
+import apiService from "./services/api";
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsAuthenticated(!!user);
-      setIsLoading(false);
-    });
+    const checkAuth = async () => {
+      const token = apiService.getToken();
+      if (!token) {
+        setIsAuthenticated(false);
+        setIsLoading(false);
+        return;
+      }
 
-    return () => unsubscribe();
+      try {
+        await apiService.verifyToken();
+        setIsAuthenticated(true);
+      } catch (error) {
+        setIsAuthenticated(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
   }, []);
 
   if (isLoading) {
@@ -29,11 +41,11 @@ export default function App() {
     <>
       {isAuthenticated ? (
         <>
-          <Nav />
+          <Nav setIsAuthenticated={setIsAuthenticated} />
           <Main />
         </>
       ) : (
-        <Land />
+        <Land setIsAuthenticated={setIsAuthenticated} />
       )}
     </>
   );

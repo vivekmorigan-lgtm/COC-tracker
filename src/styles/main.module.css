@@ -37,12 +37,83 @@
   cursor: pointer;
 }
 
+.btnAlt {
+  min-width: 120px;
+  padding: 10px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--sec-hover);
+  color: var(--light);
+  border: 1px solid #333;
+  gap: 8px;
+  cursor: pointer;
+}
+
 .cardBox {
   background: var(--sec);
-  padding: 12px;
-  border-radius: 8px;
+  border-radius: 12px;
   border: 1px solid var(--pri-dark);
   color: #ddd;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cardBox:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(255, 136, 0, 0.2);
+}
+
+.cardHeader {
+  background: var(--sec-dark);
+  padding: 16px;
+  border-bottom: 2px solid var(--pri-dark);
+}
+
+.cardBody {
+  padding: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--sec);
+}
+
+.cardFooter {
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 136, 0, 0.2);
+  display: flex;
+  justify-content: center;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.infoRow:last-child {
+  border-bottom: none;
+}
+
+.infoLabel {
+  font-size: 13px;
+  color: #999;
+  font-weight: 500;
+}
+
+.infoValue {
+  font-size: 15px;
+  color: #eee;
+  font-weight: 600;
 }
 
 .row {
@@ -92,6 +163,7 @@
   background: #080808;
   color: #eee;
   width: 100%;
+  cursor: pointer;
 }
 
 .king {
@@ -103,12 +175,16 @@
 }
 
 .name {
-  border-bottom: 2px solid #ff8800;
-  color: #eee;
+  color: #fff;
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 p {
   font-size: 15px;
+  margin: 0;
 }
 
 @media (max-width: 1024px) {
@@ -125,6 +201,15 @@ p {
   .king {
     height: 160px;
     width: 160px;
+  }
+
+  .name {
+    font-size: 16px;
+  }
+
+  .infoLabel,
+  .infoValue {
+    font-size: 14px;
   }
 }
 
@@ -177,8 +262,17 @@ p {
     gap: 6px;
   }
 
-  .cardBox {
-    padding: 10px;
+  .cardHeader {
+    padding: 12px;
+  }
+
+  .cardBody {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .cardFooter {
+    padding: 10px 12px;
   }
 
   .row {
@@ -213,6 +307,19 @@ p {
   p {
     font-size: 13px;
   }
+
+  .name {
+    font-size: 15px;
+  }
+
+  .infoLabel,
+  .infoValue {
+    font-size: 13px;
+  }
+
+  .infoRow {
+    padding: 6px 0;
+  }
 }
 
 .loader {
@@ -243,18 +350,18 @@ p {
   animation: loaderAnim 1.2s ease-in-out infinite alternate;
 }
 @keyframes loaderAnim {
-  0%{
+  0% {
     transform: scale(0);
   }
-  100%{
+  100% {
     transform: scale(1);
   }
 }
 @keyframes rotate {
-  0%{
+  0% {
     transform: rotate(0);
   }
-  100%{
+  100% {
     transform: rotate(360deg);
   }
 }

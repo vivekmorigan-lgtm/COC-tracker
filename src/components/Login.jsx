@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "../userdata/firebase";
+import apiService from "../services/api";
 import style from "../styles/login.module.css";
 
 export default function Login({ onSwitchToSignUp, onAuthSuccess, onBack }) {
@@ -9,7 +8,6 @@ export default function Login({ onSwitchToSignUp, onAuthSuccess, onBack }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // popup states
   const [showResetPopup, setShowResetPopup] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [successPopup, setSuccessPopup] = useState(false);
@@ -20,7 +18,7 @@ export default function Login({ onSwitchToSignUp, onAuthSuccess, onBack }) {
     setLoading(true);
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await apiService.login(email, password);
       if (typeof onAuthSuccess === "function") onAuthSuccess();
     } catch (err) {
       setError(err.message || "Failed to sign in.");
@@ -29,37 +27,39 @@ export default function Login({ onSwitchToSignUp, onAuthSuccess, onBack }) {
     }
   };
 
-  const sendResetLink = () => {
+  const sendResetLink = async () => {
     if (!resetEmail) {
       setError("Please enter your email.");
       return;
     }
 
-    sendPasswordResetEmail(auth, resetEmail)
-      .then(() => {
-        setShowResetPopup(false);
-        setSuccessPopup(true);
-      })
-      .catch((err) => setError(err.message));
+    try {
+      await apiService.resetPassword(resetEmail);
+      setShowResetPopup(false);
+      setSuccessPopup(true);
+      setError("");
+    } catch (err) {
+      setError(err.message || "Failed to send reset email.");
+    }
   };
 
   return (
     <div className={style.loginContainer}>
-
-      {/* --------------- SUCCESS POPUP --------------- */}
       {successPopup && (
         <div className={style.popupOverlay}>
           <div className={style.popupBox}>
             <h3>Password Reset Email Sent</h3>
             <p>Check your inbox for the reset link.</p>
-            <button onClick={() => setSuccessPopup(false)} className={style.btn}>
+            <button
+              onClick={() => setSuccessPopup(false)}
+              className={style.btn}
+            >
               OK
             </button>
           </div>
         </div>
       )}
 
-      {/* --------------- RESET PASSWORD POPUP --------------- */}
       {showResetPopup && (
         <div className={style.popupOverlay}>
           <div className={style.popupBox}>
@@ -79,14 +79,16 @@ export default function Login({ onSwitchToSignUp, onAuthSuccess, onBack }) {
             <button className={style.btn} onClick={sendResetLink}>
               Next
             </button>
-            <button className={`${style.backBtn} ${style.btn}`} onClick={() => setShowResetPopup(false)}>
+            <button
+              className={`${style.backBtn} ${style.btn}`}
+              onClick={() => setShowResetPopup(false)}
+            >
               Cancel
             </button>
           </div>
         </div>
       )}
 
-      {/* --------------- LOGIN BOX --------------- */}
       <div className={style.loginBox}>
         <h2 className={style.title}>Welcome Back!</h2>
 
@@ -116,7 +118,11 @@ export default function Login({ onSwitchToSignUp, onAuthSuccess, onBack }) {
           </button>
 
           {onBack && (
-            <button type="button" onClick={onBack} className={`${style.backBtn} ${style.btn}`}>
+            <button
+              type="button"
+              onClick={onBack}
+              className={`${style.backBtn} ${style.btn}`}
+            >
               Back
             </button>
           )}
@@ -124,14 +130,19 @@ export default function Login({ onSwitchToSignUp, onAuthSuccess, onBack }) {
 
         <p className={style.toggleText}>
           Forgot your{" "}
-          <span className={style.toggleLink} onClick={() => setShowResetPopup(true)}>
+          <span
+            className={style.toggleLink}
+            onClick={() => setShowResetPopup(true)}
+          >
             password?
           </span>
         </p>
 
         <p className={style.toggleText}>
           Don't have an account?{" "}
-          <span className={style.toggleLink} onClick={onSwitchToSignUp}>Sign Up</span>
+          <span className={style.toggleLink} onClick={onSwitchToSignUp}>
+            Sign Up
+          </span>
         </p>
       </div>
     </div>

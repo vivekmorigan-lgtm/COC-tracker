@@ -5,7 +5,6 @@
   font-family: var(--font-coc);
 }
 
-/* Header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -60,7 +59,6 @@
   transform: translateY(-2px);
 }
 
-/* Hero Section */
 .hero {
   display: flex;
   flex-direction: column;
@@ -78,11 +76,11 @@
 
 .heroDescription {
   font-size: 1.2rem;
-  max-width: 600px;
   margin-bottom: 2rem;
   color: #b0b0c0;
   line-height: 1.6;
   text-align: center;
+  align-self: center;
 }
 
 .imgPlaceholder {
@@ -99,7 +97,6 @@
   color: #555;
 }
 
-/* Features Section */
 .features {
   padding: 4rem 2rem;
   background-color: #161625;
@@ -136,7 +133,68 @@
   color: #e0e0e0;
 }
 
-/* About Section */
+.howTo {
+  padding: 4rem 2rem;
+  background-color: #1a1a2e;
+}
+
+.stepsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.stepCard {
+  background: linear-gradient(135deg, #1e1e3f 0%, #161625 100%);
+  padding: 2rem;
+  border-radius: 15px;
+  border: 1px solid #2a2a4a;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.stepCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--pri), #ffa500);
+}
+
+.stepNumber {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--pri), #ffa500);
+  color: #161625;
+  font-size: 2rem;
+  font-weight: 900;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem auto;
+  box-shadow: 0 4px 15px rgba(255, 204, 0, 0.3);
+}
+
+.stepCard h4 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: #e0e0e0;
+  font-weight: 700;
+}
+
+.stepCard p {
+  color: #b0b0c0;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
 .about {
   padding: 4rem 2rem;
   text-align: center;
@@ -148,42 +206,40 @@
   font-size: 1.1rem;
   line-height: 1.6;
 }
-/* Image Mockup */
 .imgMockup {
   width: calc(100% - 20px);
   height: calc(100% - 20px);
-  background: url('../img/Hero.png') no-repeat center center;
+  background: url("../img/Hero.png") no-repeat center center;
   background-size: cover;
 }
 .featureIcon {
   width: 60px;
   height: 60px;
   margin: 1rem auto 0 auto;
-  background: url('../img/Timer.png') no-repeat center center;
+  background: url("../img/Timer.png") no-repeat center center;
   background-size: contain;
 }
-.featureIcon2{
+.featureIcon2 {
   width: 60px;
   height: 60px;
   margin: 1rem auto 0 auto;
-  background: url('../img/Townhall.png') no-repeat center center;
+  background: url("../img/Townhall.png") no-repeat center center;
   background-size: contain;
   display: inline-block;
 }
-.featureIcon3{
+.featureIcon3 {
   width: 60px;
   height: 60px;
   margin: 1rem auto 0 auto;
-  background: url('../img/Townhall2.png') no-repeat center center;
+  background: url("../img/Townhall2.png") no-repeat center center;
   background-size: contain;
   display: inline-block;
 }
-.Icon{
+.Icon {
   font-size: 48px;
   color: #aaa;
   margin-top: 1rem;
 }
-/* footer */
 .footer {
   background-color: #161625;
   color: #888;
@@ -204,7 +260,6 @@
   margin: 0;
 }
 
-/* Professional footer layout */
 .footerContainer {
   max-width: 1200px;
   margin: 0 auto;
@@ -248,7 +303,6 @@
   margin-bottom: 0.5rem;
 }
 .colList li a {
- 
   color: #b0b0c0;
 }
 
@@ -277,7 +331,7 @@
   font-weight: 700;
 }
 
-.socialRow{
+.socialRow {
   display: flex;
   align-items: center;
   gap: 15px;
@@ -345,15 +399,15 @@
   }
 }
 .subscribeMessage.success {
-  color: #4BB543;
+  color: #4bb543;
   margin-top: 0.5rem;
 }
 .subscribeMessage.error {
-  color: #FF4136;
+  color: #ff4136;
   margin-top: 0.5rem;
 }
 
-.heroCont{
+.heroCont {
   height: 300px;
   width: 100%;
   position: relative;
@@ -363,39 +417,39 @@
   justify-content: center;
 }
 
-.king2{
+.king2 {
   height: 200px;
   width: 200px;
-  background: url('../img/Kingno2.png');
+  background: url("../img/Kingno2.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
-.queen{
+.queen {
   height: 200px;
   width: 200px;
-  background: url('../img/Queen.png');
+  background: url("../img/Queen.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
-.wardern{
+.wardern {
   height: 200px;
   width: 200px;
-  background: url('../img/Warden.png');
+  background: url("../img/Warden.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
-.champ{
+.champ {
   height: 200px;
   width: 200px;
-  background: url('../img/Champion.png');
+  background: url("../img/Champion.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
-.headHero{
+.headHero {
   color: #e0e0e0;
   position: absolute;
   left: 0;
@@ -409,20 +463,37 @@
   user-select: none;
 }
 
-.king2, .queen, .wardern, .champ, .imgMockup, .heroContent {
+.king2,
+.queen,
+.wardern,
+.champ,
+.imgMockup,
+.heroContent {
   position: relative;
   z-index: 1;
 }
 
 @media (max-width: 768px) {
-  .headHero{
+  .headHero {
     font-size: 6rem;
     bottom: 20px;
   }
 }
 @media (max-width: 480px) {
-  .headHero{
+  .headHero {
     font-size: 4rem;
     bottom: 15px;
+  }
+  .stepsContainer {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .stepCard {
+    padding: 1.5rem;
+  }
+  .stepNumber {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
   }
 }

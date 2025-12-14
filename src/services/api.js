@@ -1,5 +1,4 @@
-// const API_URL = 'https://coc-tracker-juwm.onrender.com/api';
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://coc-tracker-xdb6.onrender.com/api';
 
 class ApiService {
   constructor() {

@@ -209,21 +209,21 @@
 .imgMockup {
   width: calc(100% - 20px);
   height: calc(100% - 20px);
-  background: url("../img/Hero.png") no-repeat center center;
+  background: url("/img/Hero.png") no-repeat center center;
   background-size: cover;
 }
 .featureIcon {
   width: 60px;
   height: 60px;
   margin: 1rem auto 0 auto;
-  background: url("../img/Timer.png") no-repeat center center;
+  background: url("/img/Timer.png") no-repeat center center;
   background-size: contain;
 }
 .featureIcon2 {
   width: 60px;
   height: 60px;
   margin: 1rem auto 0 auto;
-  background: url("../img/Townhall.png") no-repeat center center;
+  background: url("/img/Townhall.png") no-repeat center center;
   background-size: contain;
   display: inline-block;
 }
@@ -231,7 +231,7 @@
   width: 60px;
   height: 60px;
   margin: 1rem auto 0 auto;
-  background: url("../img/Townhall2.png") no-repeat center center;
+  background: url("/img/Townhall2.png") no-repeat center center;
   background-size: contain;
   display: inline-block;
 }
@@ -420,7 +420,7 @@
 .king2 {
   height: 200px;
   width: 200px;
-  background: url("../img/Kingno2.png");
+  background: url("/img/Kingno2.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -428,7 +428,7 @@
 .queen {
   height: 200px;
   width: 200px;
-  background: url("../img/Queen.png");
+  background: url("/img/Queen.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -436,7 +436,7 @@
 .wardern {
   height: 200px;
   width: 200px;
-  background: url("../img/Warden.png");
+  background: url("/img/Warden.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -444,7 +444,7 @@
 .champ {
   height: 200px;
   width: 200px;
-  background: url("../img/Champion.png");
+  background: url("/img/Champion.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

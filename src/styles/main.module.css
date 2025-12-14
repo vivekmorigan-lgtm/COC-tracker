@@ -196,7 +196,7 @@
 .king {
   height: 190px;
   width: 190px;
-  background: url("../img/King.png");
+  background: url("/img/King.png");
   background-size: cover;
   display: block;
 }

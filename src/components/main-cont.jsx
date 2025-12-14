@@ -295,8 +295,8 @@ export default function Main() {
                     style={{
                       backgroundImage:
                         t.village === "Home Village"
-                          ? "url('/src/img/Home.jpg')"
-                          : "url('/src/img/builder.jpg')",
+                          ? "url('/img/Home.jpg')"
+                          : "url('/img/builder.jpg')",
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                     }}

@@ -1,6 +1,6 @@
 @font-face {
   font-family: "SupercellMagic";
-  src: url("../fonts/Clash_Regular.otf") format("truetype");
+  src: url("/fonts/Clash_Regular.otf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -20,7 +20,7 @@
   --success: #2ecc71;
 }
 body {
-  background: url("../img/Background.png") no-repeat center center fixed;
+  background: url("/img/Background.png") no-repeat center center fixed;
   background-position: center;
   background-repeat: no-repeat;
   overflow-x: hidden;

@@ -19,7 +19,7 @@ export const sendPasswordResetEmail = async (name, email, resetToken) => {
   const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}`;
 
   const mailOptions = {
-    from: `"Cheifs" <${emailUser}>`,
+    from: `"chiefss" <${emailUser}>`,
     to: email,
     subject: 'Reset Your Password - Chiefs.io',
     html: `
@@ -213,7 +213,7 @@ export const sendPasswordResetEmail = async (name, email, resetToken) => {
         </main>
         <footer>
           <div class="img"></div>
-          <span><p>Regards from Cheif's.io</p></span>
+          <span><p>Regards from chiefs's.io</p></span>
         </footer>
       </div>
     </div>

@@ -290,15 +290,31 @@ export default function Main() {
             {tasks.map((t) => (
               <div key={t._id} className={style.col4}>
                 <div className={style.cardBox}>
-                  <div className={style.cardHeader}>
+                  <div
+                    className={style.cardHeader}
+                    style={{
+                      backgroundImage:
+                        t.village === "Home Village"
+                          ? "url('/src/img/Home.jpg')"
+                          : "url('/src/img/builder.jpg')",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}
+                  >
                     <h4 className={style.name}>
-                      {t.type}: {t.item}
+                      {t.item}{" "}
+                      <button
+                        className={style.delbtn}
+                        onClick={() => removeTask(t._id)}
+                      >
+                        <i className="bi bi-trash"></i>
+                      </button>{" "}
                     </h4>
                   </div>
                   <div className={style.cardBody}>
                     <div className={style.infoRow}>
-                      <span className={style.infoLabel}>Village</span>
-                      <span className={style.infoValue}>{t.village}</span>
+                      <span className={style.infoLabel}>Type</span>
+                      <span className={style.infoValue}>{t.type}</span>
                     </div>
                     <div className={style.infoRow}>
                       <span className={style.infoLabel}>Time Set</span>
@@ -310,14 +326,6 @@ export default function Main() {
                         {formatRemaining(t.endTime)}
                       </span>
                     </div>
-                  </div>
-                  <div className={style.cardFooter}>
-                    <button
-                      className={style.btn}
-                      onClick={() => removeTask(t._id)}
-                    >
-                      <i className="bi bi-trash"></i> Remove
-                    </button>
                   </div>
                 </div>
               </div>

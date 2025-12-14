@@ -1,18 +1,25 @@
 import nodemailer from 'nodemailer';
+import chalk from 'chalk';
+import dotenv from "dotenv";
+dotenv.config();
+
+const emailUser = process.env.GMAIL_USER;
+const emailPass = process.env.GMAIL_APP_PASSWORD;
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD,
+    user: emailUser,
+    pass: emailPass,
   }
 });
 
 export const sendPasswordResetEmail = async (name, email, resetToken) => {
-  const resetUrl = `http://localhost:5173/reset-password?token=${resetToken}`;
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+  const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}`;
 
   const mailOptions = {
-    from: `"Cheifs" <${process.env.GMAIL_USER}>`,
+    from: `"Cheifs" <${emailUser}>`,
     to: email,
     subject: 'Reset Your Password - Chiefs.io',
     html: `
@@ -217,12 +224,13 @@ export const sendPasswordResetEmail = async (name, email, resetToken) => {
   };
 
   try {
-    console.log('Sending password reset email to:', email);
+    console.log(chalk.blue(' Sending password reset email to:'), email);
     await transporter.sendMail(mailOptions);
-    console.log('Password reset email sent successfully to:', email);
+    console.log(chalk.green(' Password reset email sent successfully to:'), email);
     return { success: true };
   } catch (error) {
-    console.error('Email send error:', error);
+    console.error(chalk.red(' Email send error:'), error);
+
     return { success: false, error: error.message };
   }
 };

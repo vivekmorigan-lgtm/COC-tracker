@@ -3,7 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import style from "../styles/nav.module.css";
 import apiService from "../services/api";
 
-function Nav({ setIsAuthenticated }) {
+function Nav({ setIsAuthenticated, setShowHelp }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [userData, setUserData] = useState(null);
   const [showResetPopup, setShowResetPopup] = useState(false);
@@ -114,6 +114,9 @@ function Nav({ setIsAuthenticated }) {
               className={style.dropdownItem}
               onClick={() => {
                 setProfileOpen(false);
+                if (setShowHelp) {
+                  setShowHelp(true);
+                }
               }}
             >
               <i className="bi bi-question-circle"></i> Help & Support
@@ -207,9 +210,8 @@ function Nav({ setIsAuthenticated }) {
                   type="email"
                   placeholder="Enter your email"
                   value={resetEmail}
-                  onChange={(e) => setResetEmail(e.target.value)}
                   className={style.input}
-                  disabled={resetLoading}
+                  disabled
                 />
                 {resetError && <p className={style.error}>{resetError}</p>}
                 <div className={style.popupButtons}>

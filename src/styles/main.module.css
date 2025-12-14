@@ -36,6 +36,17 @@
   gap: 8px;
   cursor: pointer;
 }
+.delbtn {
+  padding: 10px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--pri-dark);
+  color: var(--light);
+  border: 1px solid #333;
+  cursor: pointer;
+}
 
 .btnAlt {
   min-width: 120px;
@@ -58,7 +69,7 @@
   color: #ddd;
   overflow: hidden;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   height: 100%;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -72,7 +83,30 @@
 .cardHeader {
   background: var(--sec-dark);
   padding: 16px;
-  border-bottom: 2px solid var(--pri-dark);
+  border-right: 2px solid var(--pri-dark);
+  width: 40%;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.cardHeader::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+.cardHeader > * {
+  position: relative;
+  z-index: 2;
 }
 
 .cardBody {
@@ -82,13 +116,6 @@
   flex-direction: column;
   gap: 10px;
   background: var(--sec);
-}
-
-.cardFooter {
-  padding: 12px 16px;
-  background: rgba(0, 0, 0, 0.2);
-  border-top: 1px solid rgba(255, 136, 0, 0.2);
-  display: flex;
   justify-content: center;
 }
 
@@ -235,6 +262,16 @@ p {
     max-width: 90%;
     padding: 16px;
     margin: 0 15px;
+  }
+
+  .cardBox {
+    flex-direction: column;
+  }
+
+  .cardHeader {
+    width: 100%;
+    border-right: none;
+    border-bottom: 2px solid var(--pri-dark);
   }
 
   .king {

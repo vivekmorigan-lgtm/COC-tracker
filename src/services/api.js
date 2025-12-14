@@ -1,21 +1,39 @@
-const API_URL = 'https://coc-tracker-juwm.onrender.com/api';
+// const API_URL = 'https://coc-tracker-juwm.onrender.com/api';
+const API_URL = 'http://localhost:5000/api';
 
 class ApiService {
   constructor() {
-    this.token = localStorage.getItem('token');
+    this.token = this.getCookie('token');
+  }
+
+  getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  }
+
+  setCookie(name, value, days = 7) {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
+  }
+
+  deleteCookie(name) {
+    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
   }
 
   setToken(token) {
     this.token = token;
     if (token) {
-      localStorage.setItem('token', token);
+      this.setCookie('token', token);
     } else {
-      localStorage.removeItem('token');
+      this.deleteCookie('token');
     }
   }
 
   getToken() {
-    return this.token || localStorage.getItem('token');
+    return this.token || this.getCookie('token');
   }
 
   async request(endpoint, options = {}) {
@@ -73,6 +91,15 @@ class ApiService {
       method: 'POST',
       body: JSON.stringify({ email }),
     });
+  }
+
+  async resetPasswordConfirm(token, newPassword) {
+    const data = await this.request('/auth/reset-password-confirm', {
+      method: 'POST',
+      body: JSON.stringify({ token, newPassword }),
+    });
+    this.setToken(data.token);
+    return data;
   }
 
   async verifyToken() {

@@ -115,7 +115,7 @@ router.post('/reset-password', async (req, res) => {
     user.resetPasswordExpire = Date.now() + 3600000;
     await user.save();
 
-    const emailResult = await sendPasswordResetEmail(user.email, resetToken);
+    const emailResult = await sendPasswordResetEmail(user.name, user.email, resetToken);
 
     if (!emailResult.success) {
       return res.status(500).json({ error: 'Failed to send reset email' });
